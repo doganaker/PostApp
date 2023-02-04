@@ -1,9 +1,8 @@
-import './App.scss';
 import Posts from './components/posts/posts.component';
 
 const App = () => {
   return (
-    <div className="App">
+    <div>
       <Posts />
     </div>
   );
