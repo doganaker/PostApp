@@ -2,22 +2,11 @@ import { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { useSelector, useDispatch } from "react-redux";
 import "./posts.styles.scss";
-import { Box, Modal, Button, Grid } from "@mui/material";
-import Comments from "../comments/comments.component";
+import { Button, Grid } from "@mui/material";
 import useFetch from "../../common/useFetch";
 import { setData } from "../../redux/features/posts/postSlice";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import CommentModal from "../modal/modal.component";
 
 const Posts = () => {
   const [open, setOpen] = useState(false);
@@ -41,28 +30,30 @@ const Posts = () => {
   };
 
   const columns = [
-    { field: "id", headerName: "Id", width: 70 },
-    { field: "userId", headerName: "User Id", width: 130 },
-    { field: "title", headerName: "Title", width: 130 },
+    { field: "id", headerName: "Id", width: 70, flex: 1 },
+    { field: "userId", headerName: "User Id", width: 70, flex: 1 },
+    { field: "title", headerName: "Title", minWidth: 250, flex: 1 },
     {
       field: "body",
       headerName: "Body",
-      width: 200,
+      minWidth: 250,
+      flex: 1,
     },
     {
       field: "comments",
       headerName: "View Comments",
       width: 130,
+      flex: 1,
       renderCell: (params) => {
         let postId = params.row.id;
         return (
           <Button
-            variant="contained"
+            variant="text"
             onClick={() => {
               handleOpen(postId);
             }}
           >
-            View
+            <VisibilityIcon />
           </Button>
         );
       },
@@ -77,7 +68,7 @@ const Posts = () => {
       alignItems="center"
       justify="flex-start"
     >
-      <Grid item xs={6}>
+      <Grid item xs={12}>
         <div className="grid-container">
           <h1 className="title">POSTS</h1>
           <DataGrid
@@ -91,16 +82,7 @@ const Posts = () => {
           />
         </div>
       </Grid>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Comments postId={postId} />
-        </Box>
-      </Modal>
+      <CommentModal open={open} postId={postId} handleClose={handleClose} />
     </Grid>
   );
 };
