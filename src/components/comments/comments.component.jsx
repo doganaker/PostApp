@@ -1,16 +1,17 @@
-import { Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
-import ListItemText from "@mui/material/ListItemText";
-import Typography from "@mui/material/Typography";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 import useFetch from "../../common/useFetch";
 import { setData } from "../../redux/features/comments/commentsSlice";
+import { Fragment } from "react";
+import './comments.styles.scss'
 
-const Comments = ({postId}) => {
+const Comments = ({ postId }) => {
   const commentData = useSelector((state) => state.comments);
   const dispatch = useDispatch();
   const { error, data } = useFetch(
@@ -21,49 +22,39 @@ const Comments = ({postId}) => {
     dispatch(setData(data));
   }
 
-  const getAvatarAlt = (index) => {
-    return commentData[index].email.substring(
-      0,
-      commentData[index].email.indexOf(".")
-    );
-  };
   return (
-    <List sx={{ width: "100%", maxWidth: 400, bgcolor: "background.paper" }}>
-      <ListItem alignItems="center">
-        <ListItemText primary="COMMENTS" />
-      </ListItem>
-      {commentData.map((comment, index) => {
-        return (
-          <Fragment key={comment.id}>
-            <ListItem alignItems="flex-start">
-              <ListItemAvatar>
-                <Avatar
-                  alt={getAvatarAlt(index)}
-                  src="/static/images/avatar/1.jpg"
-                />
-              </ListItemAvatar>
-              <ListItemText
-                primary={comment.name}
-                secondary={
-                  <Fragment>
-                    <Typography
-                      sx={{ display: "flex" }}
-                      component="span"
-                      variant="body2"
-                      color="text.primary"
-                    >
-                      {comment.email}
-                    </Typography>
-                    {comment.body}
-                  </Fragment>
-                }
-              />
-            </ListItem>
-            <Divider variant="fullWidth" component="li" />
-          </Fragment>
-        );
-      })}
-    </List>
+    <Fragment>
+      <h1 className="title">COMMENTS</h1>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ width: 70 }}>Id</TableCell>
+              <TableCell sx={{ width: 70 }}>Post Id</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Body</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {commentData.map((row) => (
+              <TableRow
+                key={row.id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {row.id}
+                </TableCell>
+                <TableCell>{row.postId}</TableCell>
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.email}</TableCell>
+                <TableCell>{row.body}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Fragment>
   );
 };
 
