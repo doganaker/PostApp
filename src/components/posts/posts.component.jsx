@@ -21,17 +21,19 @@ const style = {
 
 const Posts = () => {
   const [open, setOpen] = useState(false);
+  const [postId, setPostId] = useState(null);
   const posts = useSelector((state) => state.posts);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const { error, data } = useFetch(
     "https://jsonplaceholder.typicode.com/posts"
   );
 
   if (!error && data) {
-    dispatch(setData(data))
+    dispatch(setData(data));
   }
 
-  const handleOpen = () => {
+  const handleOpen = (postId) => {
+    setPostId(postId);
     setOpen(true);
   };
   const handleClose = () => {
@@ -52,11 +54,13 @@ const Posts = () => {
       headerName: "View Comments",
       width: 130,
       renderCell: (params) => {
+        let postId = params.row.id;
+        debugger;
         return (
           <Button
             variant="contained"
             onClick={() => {
-              handleOpen();
+              handleOpen(postId);
             }}
           >
             View
@@ -94,7 +98,7 @@ const Posts = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Comments />
+          <Comments postId={postId}/>
         </Box>
       </Modal>
     </Grid>
