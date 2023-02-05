@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
+import { useSelector, useDispatch } from "react-redux";
 import "./posts.styles.scss";
 import { Box, Modal, Button, Grid } from "@mui/material";
 import Comments from "../comments/comments.component";
+import useFetch from "../../common/useFetch";
+import { setData } from "../../redux/features/posts/postSlice";
 
 const style = {
   position: "absolute",
@@ -18,7 +21,19 @@ const style = {
 
 const Posts = () => {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => {
+  const [postId, setPostId] = useState(null);
+  const posts = useSelector((state) => state.posts);
+  const dispatch = useDispatch();
+  const { error, data } = useFetch(
+    "https://jsonplaceholder.typicode.com/posts"
+  );
+
+  if (!error && data) {
+    dispatch(setData(data));
+  }
+
+  const handleOpen = (postId) => {
+    setPostId(postId);
     setOpen(true);
   };
   const handleClose = () => {
@@ -26,34 +41,26 @@ const Posts = () => {
   };
 
   const columns = [
-    { field: "id", headerName: "ID", width: 70 },
-    { field: "firstName", headerName: "First name", width: 130 },
-    { field: "lastName", headerName: "Last name", width: 130 },
+    { field: "id", headerName: "Id", width: 70 },
+    { field: "userId", headerName: "User Id", width: 130 },
+    { field: "title", headerName: "Title", width: 130 },
     {
-      field: "age",
-      headerName: "Age",
-      type: "number",
-      width: 90,
-    },
-    {
-      field: "fullName",
-      headerName: "Full name",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 160,
-      valueGetter: (params) =>
-        `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+      field: "body",
+      headerName: "Body",
+      width: 200,
     },
     {
       field: "comments",
       headerName: "View Comments",
       width: 130,
       renderCell: (params) => {
+        let postId = params.row.id;
+        debugger;
         return (
           <Button
             variant="contained"
             onClick={() => {
-              handleOpen();
+              handleOpen(postId);
             }}
           >
             View
@@ -63,17 +70,6 @@ const Posts = () => {
     },
   ];
 
-  const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-  ];
   return (
     <Grid
       container
@@ -85,12 +81,13 @@ const Posts = () => {
       <Grid item xs={6}>
         <div className="grid-container">
           <DataGrid
-            rows={rows}
+            rows={posts}
             columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
             checkboxSelection
             disableSelectionOnClick
+            autoHeight
           />
         </div>
       </Grid>
@@ -101,7 +98,7 @@ const Posts = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-            <Comments />
+          <Comments postId={postId}/>
         </Box>
       </Modal>
     </Grid>

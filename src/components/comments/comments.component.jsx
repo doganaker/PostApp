@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
@@ -6,38 +7,26 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
+import useFetch from "../../common/useFetch";
+import { setData } from "../../redux/features/comments/commentsSlice";
 
-const commentData = [
-  {
-    postId: 3,
-    id: 11,
-    name: "Veronica's comment",
-    email: "Veronica_Goodwin@timmothy.net",
-    body: `ut dolorum nostrum id quia aut est
-        fuga est inventore vel eligendi explicabo quis consectetur
-        aut occaecati repellat id natus quo est
-        ut blanditiis quia ut vel ut maiores ea`,
-  },
-  {
-    postId: 3,
-    id: 12,
-    name: "Oswald's comment",
-    email: "Oswald.Vandervort@leanne.org",
-    body: `expedita maiores dignissimos facilis
-        ipsum est rem est fugit velit sequi
-        eum odio dolores dolor totam
-        occaecati ratione eius rem velit`,
-  },
-];
-
-const getAvatarAlt = (index) => {
-  return commentData[index].email.substring(
-    0,
-    commentData[index].email.indexOf(".")
+const Comments = ({postId}) => {
+  const commentData = useSelector((state) => state.comments);
+  const dispatch = useDispatch();
+  const { error, data } = useFetch(
+    `https://jsonplaceholder.typicode.com/posts/${postId}/comments`
   );
-};
 
-const Comments = () => {
+  if (!error && data) {
+    dispatch(setData(data));
+  }
+
+  const getAvatarAlt = (index) => {
+    return commentData[index].email.substring(
+      0,
+      commentData[index].email.indexOf(".")
+    );
+  };
   return (
     <List sx={{ width: "100%", maxWidth: 400, bgcolor: "background.paper" }}>
       <ListItem alignItems="center">
