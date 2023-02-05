@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import useFetch from "../../common/useFetch";
 import { setData } from "../../redux/features/comments/commentsSlice";
 
-const Comments = ({postId}) => {
+const Comments = ({ postId }) => {
   const commentData = useSelector((state) => state.comments);
   const dispatch = useDispatch();
   const { error, data } = useFetch(
@@ -35,6 +35,7 @@ const Comments = ({postId}) => {
       {commentData.map((comment, index) => {
         return (
           <Fragment key={comment.id}>
+            <Divider variant="fullWidth" component="li" />
             <ListItem alignItems="flex-start">
               <ListItemAvatar>
                 <Avatar
@@ -59,7 +60,6 @@ const Comments = ({postId}) => {
                 }
               />
             </ListItem>
-            <Divider variant="fullWidth" component="li" />
           </Fragment>
         );
       })}

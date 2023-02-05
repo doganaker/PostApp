@@ -1,0 +1,9 @@
+.nav-container {
+  display: flex;
+  .nav-link {
+    padding: 10px 15px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #1976D2;
+  }
+}

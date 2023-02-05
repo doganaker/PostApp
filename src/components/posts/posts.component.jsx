@@ -55,7 +55,6 @@ const Posts = () => {
       width: 130,
       renderCell: (params) => {
         let postId = params.row.id;
-        debugger;
         return (
           <Button
             variant="contained"
@@ -76,10 +75,11 @@ const Posts = () => {
       spacing={2}
       direction="column"
       alignItems="center"
-      justify="center"
+      justify="flex-start"
     >
       <Grid item xs={6}>
         <div className="grid-container">
+          <h1 className="title">POSTS</h1>
           <DataGrid
             rows={posts}
             columns={columns}
@@ -98,7 +98,7 @@ const Posts = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Comments postId={postId}/>
+          <Comments postId={postId} />
         </Box>
       </Modal>
     </Grid>
