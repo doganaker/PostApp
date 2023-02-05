@@ -66,7 +66,7 @@ const Posts = () => {
       spacing={2}
       direction="column"
       alignItems="center"
-      justify="flex-start"
+      justifyContent="center"
     >
       <Grid item xs={12}>
         <div className="grid-container">
