@@ -1,3 +1,9 @@
+# Also Checkout This Reposity (NewPostApp)
+
+Same task, but improved.
+Go see:
+[https://github.com/doganaker/NewPostApp]
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
